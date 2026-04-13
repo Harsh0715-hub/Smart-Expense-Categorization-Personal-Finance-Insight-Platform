@@ -110,7 +110,20 @@ Once both services are running:
 
 ## 📝 Using the Platform
 
-### Step 1: Upload Transactions CSV
+### Step 1: Validate Your Data (NEW!)
+- Go to **Validate** tab in the dashboard
+- Upload your CSV file to validate before processing
+- Review validation results:
+  - ✅ Column presence and format checks
+  - ⚠️ Warnings for missing values, duplicates, invalid formats
+  - ❌ Errors that must be fixed
+  - 📊 Data summary statistics
+  - 💰 Financial overview
+  - 👀 Data preview with detailed statistics
+- Fix any errors and re-validate until it passes
+- Click "Proceed to Upload" when validation passes
+
+### Step 2: Upload Transactions CSV
 - Go to **Upload** tab in the dashboard
 - Upload your CSV file with columns: `date`, `description`, `amount`, `type`
 - Click "Upload" to process
@@ -123,13 +136,13 @@ date,description,amount,type
 2026-01-02,SWIGGY ORDER,620,debit
 ```
 
-### Step 2: View Dashboard
+### Step 3: View Dashboard
 - Go to **Dashboard** tab
 - See KPI cards (Income, Expense, Savings, Top Category)
 - View charts: Expense Distribution, Category Spending, Weekly Trends
 - Check transaction table
 
-### Step 3: Generate Reports
+### Step 4: Generate Reports
 - Go to **Reports** tab
 - Select a category from dropdown
 - View detailed spending report for that category
@@ -193,6 +206,7 @@ Smart-Expense-Categorization-Platform/
 ├── database/
 │   └── db_config.py               # Database configuration
 ├── streamlit_pages/
+│   ├── validation.py              # Data validation page (NEW!)
 │   ├── dashboard.py               # Dashboard UI
 │   └── reports.py                 # Reports UI
 ├── utils/
@@ -234,6 +248,31 @@ CSV Upload (Streamlit UI)
 
 ---
 
+## ✨ Data Validation Features
+
+The **Validate** tab provides comprehensive data quality checks:
+
+### Validation Checks:
+- **Column Validation**: Ensures all required columns exist (`date`, `description`, `amount`, `type`)
+- **Date Format Validation**: Checks if dates can be parsed correctly
+- **Amount Format Validation**: Ensures amounts are numeric values
+- **Transaction Type Validation**: Verifies only "credit" or "debit" values
+- **Missing Values Detection**: Identifies null/missing data
+- **Duplicate Detection**: Finds and reports duplicate rows
+- **Amount Logic Validation**: 
+  - Warns about zero amounts
+  - Detects unusual patterns (e.g., negative credits, positive debits)
+
+### Validation Output:
+- ✅ **Success Messages**: Data quality confirmed
+- ⚠️ **Warnings**: Issues that may affect analysis but won't block upload
+- ❌ **Errors**: Critical issues that must be fixed
+- 📊 **Data Summary**: Row counts, transaction types, financial totals
+- 👀 **Data Preview**: Sample of the data with statistics
+- 📈 **Column Statistics**: Data types, missing values, amount ranges
+
+---
+
 ## ✅ Quick Start Checklist
 
 - [ ] Python 3.8+ installed
@@ -242,7 +281,9 @@ CSV Upload (Streamlit UI)
 - [ ] Terminal 1: `python app.py` (Flask running on 5000)
 - [ ] Terminal 2: `streamlit run streamlit_app.py` (Streamlit running on 8501)
 - [ ] Open http://localhost:8501 in browser
-- [ ] Upload CSV from **Upload** tab
+- [ ] Go to **Validate** tab and upload CSV to validate data quality
+- [ ] Fix any validation errors if needed
+- [ ] Go to **Upload** tab and upload the validated CSV
 - [ ] View analytics in **Dashboard** tab
 - [ ] Check reports in **Reports** tab
 
