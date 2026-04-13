@@ -1,7 +1,6 @@
 import pandas as pd
 
 from utils.csv_validator import CSVValidator
-from utils.error_tracker import ErrorTracker
 
 
 class DataCleaningService:
@@ -9,14 +8,11 @@ class DataCleaningService:
     def __init__(self):
 
         self.validator = CSVValidator()
-        self.error_tracker = ErrorTracker()
 
     # Step 1 — Validate CSV
     def validate_data(self, df):
 
         self.validator.validate_columns(df)
-
-        self.error_tracker.detect_invalid_amount(df)
 
         return df
 

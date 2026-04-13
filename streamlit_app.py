@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from streamlit_pages.dashboard import show_dashboard
 from streamlit_pages.reports import show_reports
+from streamlit_pages.validation import show_validation
 
 API_BASE_URL = "http://127.0.0.1:5000"
 
@@ -10,10 +11,14 @@ st.set_page_config(page_title="Smart Expense Platform", layout="wide")
 st.title("💰 Smart Expense Categorization Platform")
 
 # Sidebar Navigation
-menu = st.sidebar.radio("Navigation", ["Upload", "Dashboard", "Reports"])
+menu = st.sidebar.radio("Navigation", ["Validate", "Upload", "Dashboard", "Reports"])
+
+# ---------------- VALIDATION SCREEN ----------------
+if menu == "Validate":
+    show_validation(API_BASE_URL)
 
 # ---------------- UPLOAD SCREEN ----------------
-if menu == "Upload":
+elif menu == "Upload":
     st.header("📂 Upload Transactions CSV")
 
     uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
