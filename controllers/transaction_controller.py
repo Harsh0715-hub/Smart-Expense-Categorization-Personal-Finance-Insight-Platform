@@ -1,5 +1,3 @@
-# controllers/transaction_controller.py
-
 import pandas as pd
 from flask import Blueprint, request, jsonify
 

@@ -1,5 +1,3 @@
-# repositories/transaction_repository.py
-
 from database.db_config import get_connection
 
 
