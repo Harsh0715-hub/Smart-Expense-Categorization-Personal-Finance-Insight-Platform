@@ -37,6 +37,15 @@ def show_reports(API_BASE_URL):
 
         st.dataframe(filtered_df)
 
+        # -------- DOWNLOAD BUTTON --------
+        csv_data = filtered_df.to_csv(index=False)
+        st.download_button(
+            label="📥 Download Report as CSV",
+            data=csv_data,
+            file_name=f"{selected_category}_report.csv",
+            mime="text/csv"
+        )
+
         # -------- SUMMARY --------
         if "amount" in filtered_df.columns:
             total = filtered_df["amount"].sum()
