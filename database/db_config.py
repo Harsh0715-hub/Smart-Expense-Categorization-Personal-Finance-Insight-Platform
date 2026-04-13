@@ -9,8 +9,10 @@ DB_PATH = BASE_DIR / "expense_data.db"
 def get_connection():
     """
     Returns SQLite connection with row dictionary support.
+    Includes timeout for handling concurrent access.
     """
-    conn = sqlite3.connect(DB_PATH)
+    # 30 second timeout for database lock, autocommit mode disabled
+    conn = sqlite3.connect(str(DB_PATH), timeout=30.0, isolation_level="DEFERRED")
     conn.row_factory = sqlite3.Row
     return conn
 
