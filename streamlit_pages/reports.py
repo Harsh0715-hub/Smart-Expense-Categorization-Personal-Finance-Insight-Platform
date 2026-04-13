@@ -5,19 +5,44 @@ import pandas as pd
 def show_reports(API_BASE_URL):
     st.header("📑 Reports")
 
-    transactions = requests.get(f"{API_BASE_URL}/transactions").json()
-    df = pd.DataFrame(transactions)
+    try:
+        transactions_response = requests.get(f"{API_BASE_URL}/transactions")
+        
+        if transactions_response.status_code != 200:
+            st.error("Failed to fetch data from backend")
+            return
+        
+        transactions = transactions_response.json()
+        df = pd.DataFrame(transactions)
 
-    # -------- CATEGORY DROPDOWN --------
-    categories = df["category"].unique().tolist()
-    selected_category = st.selectbox("Select Category", categories)
+        if df.empty:
+            st.warning("No transactions uploaded yet. Please upload a CSV file first.")
+            return
 
-    filtered_df = df[df["category"] == selected_category]
+        # -------- CATEGORY DROPDOWN --------
+        if "category" not in df.columns:
+            st.error("Missing required column: category")
+            return
+        
+        categories = sorted(df["category"].unique().tolist())
+        if not categories:
+            st.warning("No categories found in data")
+            return
+        
+        selected_category = st.selectbox("Select Category", categories)
 
-    st.subheader(f"{selected_category} Report")
+        filtered_df = df[df["category"] == selected_category]
 
-    st.dataframe(filtered_df)
+        st.subheader(f"{selected_category} Report")
 
-    # -------- SUMMARY --------
-    total = filtered_df["amount"].sum()
-    st.metric("Total Spending", total)
+        st.dataframe(filtered_df)
+
+        # -------- SUMMARY --------
+        if "amount" in filtered_df.columns:
+            total = filtered_df["amount"].sum()
+            st.metric("Total Spending", f"₹ {abs(total):,.2f}")
+        else:
+            st.error("Missing required column: amount")
+            
+    except Exception as e:
+        st.error(f"Error loading reports: {str(e)}")

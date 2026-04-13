@@ -4,10 +4,10 @@ from flask import Blueprint, request, jsonify
 from repositories.transaction_repository import TransactionRepository
 
 # Member 2 ownership
-from services.cleaning_service import clean_transactions
+from services.cleaning_service import DataCleaningService
 
 # Member 3 ownership
-from services.categorization_service import categorize_transactions
+from services.categorization_service import apply_categorization
 from services.summary_service import generate_summary
 
 
@@ -31,10 +31,11 @@ def upload_transactions():
         df = pd.read_csv(file)
 
         # Member 2 layer
-        cleaned_df = clean_transactions(df)
+        cleaning_service = DataCleaningService()
+        cleaned_df = cleaning_service.clean_data(df)
 
         # Member 3 layer
-        categorized_df = categorize_transactions(cleaned_df)
+        categorized_df = apply_categorization(cleaned_df)
 
         # Member 1 DB layer
         TransactionRepository.replace_transactions(categorized_df)

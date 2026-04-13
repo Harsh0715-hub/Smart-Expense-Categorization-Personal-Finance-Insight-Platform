@@ -7,7 +7,6 @@ def generate_summary(df: pd.DataFrame) -> dict:
     """
     Generate financial summary
     """
-
     # Ensure numeric
     df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
 
