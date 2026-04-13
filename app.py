@@ -24,4 +24,5 @@ app = create_app()
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # threaded=True allows handling concurrent requests without debug mode issues
+    app.run(debug=False, threaded=True, port=5000)

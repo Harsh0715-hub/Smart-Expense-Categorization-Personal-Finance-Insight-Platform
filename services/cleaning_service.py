@@ -27,7 +27,10 @@ class DataCleaningService:
 
         df["amount"] = df["amount"].fillna(0)
 
-        df["date"] = df["date"].fillna(method="ffill")
+        df["date"] = df["date"].ffill()
+        
+        # Convert amount to numeric, handling any non-numeric values
+        df["amount"] = pd.to_numeric(df["amount"], errors="coerce").fillna(0)
 
         return df
 
@@ -57,6 +60,9 @@ class DataCleaningService:
             df["date"],
             errors="coerce"
         )
+        
+        # Convert to ISO format string for SQLite compatibility
+        df["date"] = df["date"].dt.strftime("%Y-%m-%d")
 
         return df
 

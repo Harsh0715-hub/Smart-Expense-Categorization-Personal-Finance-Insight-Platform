@@ -39,8 +39,10 @@ def show_dashboard(API_BASE_URL):
 
         if "type" in df.columns and "category" in df.columns:
             category_data = df[df["type"] == "debit"].groupby("category")["amount"].sum()
+            # Convert to absolute values (ensure positive for pie chart)
+            category_data = category_data.abs()
             
-            if not category_data.empty:
+            if not category_data.empty and (category_data > 0).any():
                 fig1, ax1 = plt.subplots()
                 ax1.pie(category_data, labels=category_data.index, autopct="%1.1f%%")
                 st.pyplot(fig1)
@@ -49,13 +51,17 @@ def show_dashboard(API_BASE_URL):
         else:
             st.error("Missing required columns: type, category")
 
+        st.divider()
+
         # -------- BAR CHART --------
         st.subheader("Category Spending")
 
         if "type" in df.columns and "category" in df.columns:
             category_data = df[df["type"] == "debit"].groupby("category")["amount"].sum()
+            # Convert to absolute values for consistent display
+            category_data = category_data.abs()
             
-            if not category_data.empty:
+            if not category_data.empty and (category_data > 0).any():
                 fig2, ax2 = plt.subplots()
                 category_data.plot(kind="bar", ax=ax2)
                 ax2.set_title("Spending by Category")
@@ -67,6 +73,8 @@ def show_dashboard(API_BASE_URL):
         else:
             st.error("Missing required columns: type, category")
 
+        st.divider()
+
         # -------- WEEKLY TREND --------
         st.subheader("Weekly Expense Trend")
 
@@ -74,8 +82,10 @@ def show_dashboard(API_BASE_URL):
             df["date"] = pd.to_datetime(df["date"])
             if "type" in df.columns:
                 weekly = df[df["type"] == "debit"].groupby(pd.Grouper(key="date", freq="W"))["amount"].sum()
+                # Convert to absolute values for consistent display
+                weekly = weekly.abs()
                 
-                if not weekly.empty:
+                if not weekly.empty and (weekly > 0).any():
                     fig3, ax3 = plt.subplots()
                     weekly.plot(ax=ax3)
                     ax3.set_title("Weekly Expense Trend")
@@ -88,6 +98,8 @@ def show_dashboard(API_BASE_URL):
                 st.error("Missing required column: type")
         else:
             st.error("Missing required column: date")
+
+        st.divider()
 
         # -------- TABLE --------
         st.subheader("Transactions")

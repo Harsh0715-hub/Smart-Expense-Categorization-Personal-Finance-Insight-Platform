@@ -19,14 +19,18 @@ if menu == "Upload":
     uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
     if uploaded_file is not None:
-        files = {"file": uploaded_file.getvalue()}
-        response = requests.post(f"{API_BASE_URL}/upload", files=files)
+        try:
+            files = {"file": (uploaded_file.name, uploaded_file.getvalue(), "text/csv")}
+            response = requests.post(f"{API_BASE_URL}/upload", files=files)
 
-        if response.status_code == 200:
-            data = response.json()
-            st.success(f"Uploaded Successfully! Rows Processed: {data['rows']}")
-        else:
-            st.error("Upload Failed")
+            if response.status_code == 200:
+                data = response.json()
+                st.success(f"Uploaded Successfully! Rows Processed: {data['rows']}")
+            else:
+                error_detail = response.json().get("message", "Unknown error")
+                st.error(f"Upload Failed: {error_detail}")
+        except Exception as e:
+            st.error(f"Error uploading file: {str(e)}")
 
 # ---------------- DASHBOARD ----------------
 elif menu == "Dashboard":
