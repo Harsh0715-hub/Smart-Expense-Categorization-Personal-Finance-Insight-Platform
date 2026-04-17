@@ -1,18 +1,6 @@
-# Smart Expense Categorization Platform - Requirements
-
-# Core Framework
-flask==2.3.0
-streamlit==1.28.0
-
-# Data Processing
-pandas==2.0.0
-numpy==1.24.0
-
-# HTTP & API
-requests==2.31.0
-
-# Visualization
-matplotlib==3.7.0
-
-# Database (Built-in SQLite, but including for reference)
-# sqlite3 (included in Python standard library)
+streamlit
+pandas>=2.2.0
+numpy>=1.26.0
+requests
+matplotlib
+scikit-learn
